@@ -10,14 +10,19 @@ import (
 	"pastebin/graph/model"
 )
 
-// CreateTodo is the resolver for the createTodo field.
-func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) (*model.Todo, error) {
-	panic(fmt.Errorf("not implemented: CreateTodo - createTodo"))
+// CreateDocument is the resolver for the createDocument field.
+func (r *mutationResolver) CreateDocument(ctx context.Context, input model.CreateDocumentInput) (*int, error) {
+	panic(fmt.Errorf("not implemented: CreateDocument - createDocument"))
 }
 
-// Todos is the resolver for the todos field.
-func (r *queryResolver) Todos(ctx context.Context) ([]*model.Todo, error) {
-	panic(fmt.Errorf("not implemented: Todos - todos"))
+// DeleteDocument is the resolver for the deleteDocument field.
+func (r *mutationResolver) DeleteDocument(ctx context.Context, id int, accessKey string) (*bool, error) {
+	panic(fmt.Errorf("not implemented: DeleteDocument - deleteDocument"))
+}
+
+// GetDocument is the resolver for the getDocument field.
+func (r *queryResolver) GetDocument(ctx context.Context, id int) (*model.Document, error) {
+	panic(fmt.Errorf("not implemented: GetDocument - getDocument"))
 }
 
 // Mutation returns MutationResolver implementation.

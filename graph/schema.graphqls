@@ -2,27 +2,38 @@
 #
 # https://gqlgen.com/getting-started/
 
-type Todo {
-  id: ID!
-  text: String!
-  done: Boolean!
-  user: User!
+scalar Date
+
+type Document {
+  id: Int!
+  createdAt: Date!
+  updatedAt: Date!
+  title: String
+  value: String!
+  accessKey: String!
+  viewCount: Int!
+  maxViewCount: Int!
+  ttlMs: Int!
 }
 
-type User {
-  id: ID!
-  name: String!
+input CreateDocumentInput {
+  value: String!
+  title: String
+  accessKey: String!
+  maxViewCount: Int = -1
+  ttlMs: Int = -1
 }
 
 type Query {
-  todos: [Todo!]!
-}
-
-input NewTodo {
-  text: String!
-  userId: String!
+  getDocument(id: Int!): Document
 }
 
 type Mutation {
-  createTodo(input: NewTodo!): Todo!
+  createDocument(input: CreateDocumentInput!): Int
+  deleteDocument(id: Int!, accessKey: String!): Boolean
+}
+
+schema {
+  query: Query
+  mutation: Mutation
 }

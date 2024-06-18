@@ -2,25 +2,28 @@
 
 package model
 
+type CreateDocumentInput struct {
+	Value        string  `json:"value"`
+	Title        *string `json:"title,omitempty"`
+	AccessKey    string  `json:"accessKey"`
+	MaxViewCount *int    `json:"maxViewCount,omitempty"`
+	TTLMs        *int    `json:"ttlMs,omitempty"`
+}
+
+type Document struct {
+	ID           int     `json:"id"`
+	CreatedAt    string  `json:"createdAt"`
+	UpdatedAt    string  `json:"updatedAt"`
+	Title        *string `json:"title,omitempty"`
+	Value        string  `json:"value"`
+	AccessKey    string  `json:"accessKey"`
+	ViewCount    int     `json:"viewCount"`
+	MaxViewCount int     `json:"maxViewCount"`
+	TTLMs        int     `json:"ttlMs"`
+}
+
 type Mutation struct {
 }
 
-type NewTodo struct {
-	Text   string `json:"text"`
-	UserID string `json:"userId"`
-}
-
 type Query struct {
-}
-
-type Todo struct {
-	ID   string `json:"id"`
-	Text string `json:"text"`
-	Done bool   `json:"done"`
-	User *User  `json:"user"`
-}
-
-type User struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
 }
