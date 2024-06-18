@@ -16,7 +16,7 @@ func NewDocumentService(db *sql.DB) DocumentService {
 	return &documentService{db: db}
 }
 
-func (s *documentService) CreateDocument(value, title, accessKey string, maxViewCount, ttlMs int) (int, error) {
+func (s *documentService) CreateDocument(value string, title *string, accessKey string, maxViewCount, ttlMs int) (int, error) {
 	now := time.Now()
 
 	res, err := s.db.Exec(`INSERT INTO documents (createdAt, updatedAt, title, value, accessKey, viewCount, maxViewCount, ttlMs) 
@@ -58,7 +58,11 @@ func (s *documentService) GetDocument(id int) (*model.Document, error) {
 		}
 		return nil, err
 	}
-	doc.Title = &title.String
+	if title.Valid {
+		doc.Title = &title.String
+	} else {
+		doc.Title = nil
+	}
 	return &doc, nil
 }
 

@@ -5,7 +5,7 @@ import (
 )
 
 type DocumentService interface {
-	CreateDocument(value, title, accessKey string, maxViewCount, ttlMs int) (int, error)
+	CreateDocument(value string, title *string, accessKey string, maxViewCount, ttlMs int) (int, error)
 	DeleteDocument(id int, accessKey string) (bool, error)
 	GetDocument(id int) (*model.Document, error)
 	DeleteExpiredDocuments() error
