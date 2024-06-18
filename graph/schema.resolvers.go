@@ -10,26 +10,50 @@ import (
 	"pastebin/graph/model"
 )
 
-// CreateDocument is the resolver for the createDocument field.
 func (r *mutationResolver) CreateDocument(ctx context.Context, input model.CreateDocumentInput) (*int, error) {
-	panic(fmt.Errorf("not implemented: CreateDocument - createDocument"))
+	fmt.Println(input)
+
+	// Установка дефолтного значения для title
+	title := input.Title
+	if title == nil {
+		defaultTitle := "Test Title"
+		title = &defaultTitle
+	}
+	fmt.Println(*title)
+
+	// Установка дефолтного значения для maxViewCount
+	maxViewCount := input.MaxViewCount
+
+	// Установка дефолтного значения для ttlMs
+	ttlMs := input.TTLMs
+
+	fmt.Println(input.Value, *title, input.AccessKey, *maxViewCount, *ttlMs)
+
+	id, err := r.DocumentService.CreateDocument(input.Value, *title, input.AccessKey, *maxViewCount, *ttlMs)
+	if err != nil {
+		return nil, err
+	}
+	return &id, nil
 }
 
-// DeleteDocument is the resolver for the deleteDocument field.
 func (r *mutationResolver) DeleteDocument(ctx context.Context, id int, accessKey string) (*bool, error) {
-	panic(fmt.Errorf("not implemented: DeleteDocument - deleteDocument"))
+	success, err := r.DocumentService.DeleteDocument(id, accessKey)
+	if err != nil {
+		return nil, err
+	}
+	return &success, nil
 }
 
-// GetDocument is the resolver for the getDocument field.
 func (r *queryResolver) GetDocument(ctx context.Context, id int) (*model.Document, error) {
-	panic(fmt.Errorf("not implemented: GetDocument - getDocument"))
+	doc, err := r.DocumentService.GetDocument(id)
+	if err != nil {
+		return nil, err
+	}
+	return doc, nil
 }
 
-// Mutation returns MutationResolver implementation.
 func (r *Resolver) Mutation() MutationResolver { return &mutationResolver{r} }
-
-// Query returns QueryResolver implementation.
-func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
+func (r *Resolver) Query() QueryResolver       { return &queryResolver{r} }
 
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }

@@ -1,7 +1,16 @@
 package graph
 
-// This file will not be regenerated automatically.
-//
-// It serves as dependency injection for your app, add any dependencies you require here.
+import (
+	"database/sql"
+	"pastebin/services"
+)
 
-type Resolver struct{}
+type Resolver struct {
+	DocumentService services.DocumentService
+}
+
+func NewResolver(db *sql.DB) *Resolver {
+	return &Resolver{
+		DocumentService: services.NewDocumentService(db),
+	}
+}
