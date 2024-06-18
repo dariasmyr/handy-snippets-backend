@@ -1,7 +1,6 @@
 package graph
 
 import (
-	"database/sql"
 	"pastebin/services"
 )
 
@@ -9,8 +8,8 @@ type Resolver struct {
 	DocumentService services.DocumentService
 }
 
-func NewResolver(db *sql.DB) *Resolver {
+func NewResolver(ds services.DocumentService) *Resolver {
 	return &Resolver{
-		DocumentService: services.NewDocumentService(db),
+		DocumentService: ds,
 	}
 }

@@ -3,7 +3,6 @@ package services
 import (
 	"database/sql"
 	"errors"
-	"fmt"
 	_ "github.com/mattn/go-sqlite3"
 	"pastebin/graph/model"
 	"time"
@@ -20,9 +19,7 @@ func NewDocumentService(db *sql.DB) DocumentService {
 func (s *documentService) CreateDocument(value, title, accessKey string, maxViewCount, ttlMs int) (int, error) {
 	now := time.Now()
 
-	fmt.Println(now, now, title, value, accessKey, 0, maxViewCount, ttlMs)
-
-	res, err := s.db.Exec(`INSERT INTO documents (created_at, updated_at, title, value, access_key, view_count, max_view_count, ttl_ms) 
+	res, err := s.db.Exec(`INSERT INTO documents (createdAt, updatedAt, title, value, accessKey, viewCount, maxViewCount, ttlMs) 
                            VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
 		now, now, title, value, accessKey, 0, maxViewCount, ttlMs)
 	if err != nil {
@@ -36,7 +33,7 @@ func (s *documentService) CreateDocument(value, title, accessKey string, maxView
 }
 
 func (s *documentService) DeleteDocument(id int, accessKey string) (bool, error) {
-	res, err := s.db.Exec(`DELETE FROM documents WHERE id = ? AND access_key = ?`, id, accessKey)
+	res, err := s.db.Exec(`DELETE FROM documents WHERE id = ? AND accessKey = ?`, id, accessKey)
 	if err != nil {
 		return false, err
 	}
@@ -48,7 +45,7 @@ func (s *documentService) DeleteDocument(id int, accessKey string) (bool, error)
 }
 
 func (s *documentService) GetDocument(id int) (*model.Document, error) {
-	row := s.db.QueryRow(`SELECT id, created_at, updated_at, title, value, access_key, view_count, max_view_count, ttl_ms 
+	row := s.db.QueryRow(`SELECT id, createdAt, updatedAt, title, value, accessKey, viewCount, maxViewCount, ttlMs 
                           FROM documents WHERE id = ?`, id)
 
 	var doc model.Document
@@ -67,6 +64,6 @@ func (s *documentService) GetDocument(id int) (*model.Document, error) {
 
 func (s *documentService) DeleteExpiredDocuments() error {
 	now := time.Now()
-	_, err := s.db.Exec(`DELETE FROM documents WHERE ttl_ms > 0 AND created_at + ttl_ms/1000 < ?`, now)
+	_, err := s.db.Exec(`DELETE FROM documents WHERE ttlMs > 0 AND createdAt + ttlMs/1000 < ?`, now)
 	return err
 }
