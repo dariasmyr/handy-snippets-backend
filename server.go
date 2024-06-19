@@ -1,6 +1,8 @@
 package main
 
 import (
+	"github.com/99designs/gqlgen/graphql/handler"
+	"github.com/99designs/gqlgen/graphql/playground"
 	"log"
 	"net/http"
 	"os"
@@ -8,9 +10,6 @@ import (
 	"pastebin/graph"
 	"pastebin/services"
 	"time"
-
-	"github.com/99designs/gqlgen/graphql/handler"
-	"github.com/99designs/gqlgen/graphql/playground"
 )
 
 const defaultPort = "8080"
@@ -27,20 +26,7 @@ func main() {
 
 	documentService := services.NewDocumentService(db)
 
-	go func() {
-		ticker := time.NewTicker(24 * time.Hour) // Пример: каждые сутки
-		defer ticker.Stop()
-
-		for {
-			select {
-			case <-ticker.C:
-				err := documentService.DeleteExpiredDocuments()
-				if err != nil {
-					log.Printf("failed to delete expired documents: %v", err)
-				}
-			}
-		}
-	}()
+	documentService.StartExpiredDocumentsCleaner(1 * time.Hour)
 
 	port := os.Getenv("PORT")
 	if port == "" {

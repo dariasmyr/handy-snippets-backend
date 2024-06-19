@@ -2,12 +2,12 @@
 #
 # https://gqlgen.com/getting-started/
 
-scalar Date
+scalar Time
 
 type Document {
   id: Int!
-  createdAt: Date!
-  updatedAt: Date!
+  createdAt: Time!
+  updatedAt: Time!
   title: String
   value: String!
   accessKey: String!

@@ -2,6 +2,10 @@
 
 package model
 
+import (
+	"time"
+)
+
 type CreateDocumentInput struct {
 	Value        string  `json:"value"`
 	Title        *string `json:"title,omitempty"`
@@ -11,15 +15,15 @@ type CreateDocumentInput struct {
 }
 
 type Document struct {
-	ID           int     `json:"id"`
-	CreatedAt    string  `json:"createdAt"`
-	UpdatedAt    string  `json:"updatedAt"`
-	Title        *string `json:"title,omitempty"`
-	Value        string  `json:"value"`
-	AccessKey    string  `json:"accessKey"`
-	ViewCount    int     `json:"viewCount"`
-	MaxViewCount int     `json:"maxViewCount"`
-	TTLMs        int     `json:"ttlMs"`
+	ID           int       `json:"id"`
+	CreatedAt    time.Time `json:"createdAt"`
+	UpdatedAt    time.Time `json:"updatedAt"`
+	Title        *string   `json:"title,omitempty"`
+	Value        string    `json:"value"`
+	AccessKey    string    `json:"accessKey"`
+	ViewCount    int       `json:"viewCount"`
+	MaxViewCount int       `json:"maxViewCount"`
+	TTLMs        int       `json:"ttlMs"`
 }
 
 type Mutation struct {
