@@ -27,6 +27,15 @@ func (r *mutationResolver) DeleteDocument(ctx context.Context, id int, accessKey
 	return &success, nil
 }
 
+// UpdateDocument is the resolver for the updateDocument field.
+func (r *mutationResolver) UpdateDocument(ctx context.Context, input model.UpdateDocumentInput) (*bool, error) {
+	success, err := r.DocumentService.UpdateDocument(input.ID, input.Value, input.Title, input.AccessKey, *input.MaxViewCount, *input.TTLMs)
+	if err != nil {
+		return nil, err
+	}
+	return &success, nil
+}
+
 // GetDocument is the resolver for the getDocument field.
 func (r *queryResolver) GetDocument(ctx context.Context, id int) (*model.Document, error) {
 	return r.DocumentService.GetDocument(id)

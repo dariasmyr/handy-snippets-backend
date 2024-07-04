@@ -63,6 +63,7 @@ type ComplexityRoot struct {
 	Mutation struct {
 		CreateDocument func(childComplexity int, input model.CreateDocumentInput) int
 		DeleteDocument func(childComplexity int, id int, accessKey string) int
+		UpdateDocument func(childComplexity int, input model.UpdateDocumentInput) int
 	}
 
 	Query struct {
@@ -73,6 +74,7 @@ type ComplexityRoot struct {
 type MutationResolver interface {
 	CreateDocument(ctx context.Context, input model.CreateDocumentInput) (*int, error)
 	DeleteDocument(ctx context.Context, id int, accessKey string) (*bool, error)
+	UpdateDocument(ctx context.Context, input model.UpdateDocumentInput) (*bool, error)
 }
 type QueryResolver interface {
 	GetDocument(ctx context.Context, id int) (*model.Document, error)
@@ -184,6 +186,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.DeleteDocument(childComplexity, args["id"].(int), args["accessKey"].(string)), true
 
+	case "Mutation.updateDocument":
+		if e.complexity.Mutation.UpdateDocument == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateDocument_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateDocument(childComplexity, args["input"].(model.UpdateDocumentInput)), true
+
 	case "Query.getDocument":
 		if e.complexity.Query.GetDocument == nil {
 			break
@@ -205,6 +219,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 	ec := executionContext{rc, e, 0, 0, make(chan graphql.DeferredResult)}
 	inputUnmarshalMap := graphql.BuildUnmarshalerMap(
 		ec.unmarshalInputCreateDocumentInput,
+		ec.unmarshalInputUpdateDocumentInput,
 	)
 	first := true
 
@@ -357,6 +372,21 @@ func (ec *executionContext) field_Mutation_deleteDocument_args(ctx context.Conte
 		}
 	}
 	args["accessKey"] = arg1
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateDocument_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.UpdateDocumentInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdateDocumentInput2pastebinᚋgraphᚋmodelᚐUpdateDocumentInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
 	return args, nil
 }
 
@@ -919,6 +949,58 @@ func (ec *executionContext) fieldContext_Mutation_deleteDocument(ctx context.Con
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_deleteDocument_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_updateDocument(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_updateDocument(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateDocument(rctx, fc.Args["input"].(model.UpdateDocumentInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*bool)
+	fc.Result = res
+	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_updateDocument(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_updateDocument_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -2961,6 +3043,68 @@ func (ec *executionContext) unmarshalInputCreateDocumentInput(ctx context.Contex
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputUpdateDocumentInput(ctx context.Context, obj interface{}) (model.UpdateDocumentInput, error) {
+	var it model.UpdateDocumentInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"id", "value", "title", "accessKey", "maxViewCount", "ttlMs"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "id":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			data, err := ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ID = data
+		case "value":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("value"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Value = data
+		case "title":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Title = data
+		case "accessKey":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("accessKey"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.AccessKey = data
+		case "maxViewCount":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("maxViewCount"))
+			data, err := ec.unmarshalOInt2ᚖint(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.MaxViewCount = data
+		case "ttlMs":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("ttlMs"))
+			data, err := ec.unmarshalOInt2ᚖint(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.TTLMs = data
+		}
+	}
+
+	return it, nil
+}
+
 // endregion **************************** input.gotpl *****************************
 
 // region    ************************** interface.gotpl ***************************
@@ -3071,6 +3215,10 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "deleteDocument":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_deleteDocument(ctx, field)
+			})
+		case "updateDocument":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateDocument(ctx, field)
 			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
@@ -3553,6 +3701,11 @@ func (ec *executionContext) marshalNTime2timeᚐTime(ctx context.Context, sel as
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) unmarshalNUpdateDocumentInput2pastebinᚋgraphᚋmodelᚐUpdateDocumentInput(ctx context.Context, v interface{}) (model.UpdateDocumentInput, error) {
+	res, err := ec.unmarshalInputUpdateDocumentInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalN__Directive2githubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐDirective(ctx context.Context, sel ast.SelectionSet, v introspection.Directive) graphql.Marshaler {

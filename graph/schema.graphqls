@@ -24,6 +24,15 @@ input CreateDocumentInput {
   ttlMs: Int = -1
 }
 
+input UpdateDocumentInput {
+  id: Int!
+  value: String
+  title: String
+  accessKey: String!
+  maxViewCount: Int!
+  ttlMs: Int!
+}
+
 type Query {
   getDocument(id: Int!): Document
 }
@@ -31,6 +40,7 @@ type Query {
 type Mutation {
   createDocument(input: CreateDocumentInput!): Int
   deleteDocument(id: Int!, accessKey: String!): Boolean
+  updateDocument(input: UpdateDocumentInput!): Boolean
 }
 
 schema {

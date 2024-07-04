@@ -31,3 +31,12 @@ type Mutation struct {
 
 type Query struct {
 }
+
+type UpdateDocumentInput struct {
+	ID           int     `json:"id"`
+	Value        *string `json:"value,omitempty"`
+	Title        *string `json:"title,omitempty"`
+	AccessKey    string  `json:"accessKey"`
+	MaxViewCount *int    `json:"maxViewCount,omitempty"`
+	TTLMs        *int    `json:"ttlMs,omitempty"`
+}

@@ -51,6 +51,38 @@ func (s *documentService) CreateDocument(value string, title *string, accessKey 
 	return int(id), nil
 }
 
+func (s *documentService) UpdateDocument(id int, value *string, title *string, accessKey string, maxViewCount, ttlMs int) (bool, error) {
+	println("id", id)
+	var storedHashedAccessKey string
+	var createdAt time.Time
+	var viewCount int
+
+	err := s.db.QueryRow(`SELECT accessKey, createdAt, viewCount FROM documents WHERE id = ?`, id).Scan(&storedHashedAccessKey, &createdAt, &viewCount)
+	if err != nil {
+		return false, err
+	}
+
+	if ttlMs > 0 && time.Since(createdAt).Milliseconds() > int64(ttlMs) {
+		_, err := s.db.Exec(`DELETE FROM documents WHERE id = ?`, id)
+		if err != nil {
+			return false, err
+		}
+		return false, errors.New("document expired and has been deleted")
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(storedHashedAccessKey), []byte(accessKey))
+	if err != nil {
+		return false, errors.New("access denied")
+	}
+
+	_, err = s.db.Exec(`UPDATE documents SET updatedAt = ?, title = ?, value = ?, maxViewCount = ?, ttlMs = ? WHERE id = ?`,
+		time.Now(), title, value, maxViewCount, ttlMs, id)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
+}
+
 func (s *documentService) DeleteDocument(id int, accessKey string) (bool, error) {
 	var storedHashedAccessKey string
 	var ttlMs int
