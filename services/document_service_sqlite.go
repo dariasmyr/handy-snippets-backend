@@ -26,6 +26,10 @@ func (s *documentService) StartExpiredDocumentsCleaner(interval time.Duration) {
 			if err != nil {
 				fmt.Println("Error deleting expired documents:", err)
 			}
+			err = s.DeleteDocumentsWithMaxViews()
+			if err != nil {
+				fmt.Println("Error deleting documents with max views:", err)
+			}
 		}
 	}()
 }
@@ -163,5 +167,10 @@ func (s *documentService) GetDocument(id int) (*model.Document, error) {
 func (s *documentService) DeleteExpiredDocuments() error {
 	now := time.Now().Unix()
 	_, err := s.db.Exec(`DELETE FROM documents WHERE ttlMs > 0 AND (createdAt + ttlMs / 1000) < ?`, now)
+	return err
+}
+
+func (s *documentService) DeleteDocumentsWithMaxViews() error {
+	_, err := s.db.Exec(`DELETE FROM documents WHERE maxViewCount > 0 AND viewCount >= maxViewCount`)
 	return err
 }

@@ -27,7 +27,7 @@ func main() {
 
 	documentService := services.NewDocumentService(db)
 
-	documentService.StartExpiredDocumentsCleaner(1 * time.Hour)
+	documentService.StartExpiredDocumentsCleaner(24 * time.Hour)
 
 	port := os.Getenv("PORT")
 	if port == "" {
