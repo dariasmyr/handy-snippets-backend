@@ -16,7 +16,6 @@ import (
 const defaultPort = "8080"
 
 func main() {
-
 	dbPath := "./data/db.sqlite"
 
 	db, err := database.InitDB(dbPath)
@@ -30,6 +29,7 @@ func main() {
 	documentService.StartExpiredDocumentsCleaner(24 * time.Hour)
 
 	port := os.Getenv("PORT")
+	println("port", port)
 	if port == "" {
 		port = defaultPort
 	}
@@ -38,7 +38,7 @@ func main() {
 	srv := handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: resolver}))
 
 	c := cors.New(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:3000"},
+		AllowedOrigins:   []string{os.Getenv("FRONTEND_URL")},
 		AllowCredentials: true,
 		AllowedMethods:   []string{"POST", "GET", "OPTIONS", "PUT", "DELETE"},
 		AllowedHeaders:   []string{"Accept", "Content-Type", "Content-Length", "Accept-Encoding", "X-CSRF-Token", "Authorization"},
