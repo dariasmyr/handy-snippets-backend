@@ -11,7 +11,7 @@ import (
 
 // CreateDocument is the resolver for the createDocument field.
 func (r *mutationResolver) CreateDocument(ctx context.Context, input model.CreateDocumentInput) (*int, error) {
-	var id, err = r.DocumentService.CreateDocument(input.Value, input.Title, input.AccessKey, *input.MaxViewCount, *input.TTLMs)
+	var id, err = r.DocumentService.CreateDocument(input.Value, input.AccessKey, *input.MaxViewCount, *input.TTLMs)
 	if err != nil {
 		return nil, err
 	}
@@ -29,7 +29,7 @@ func (r *mutationResolver) DeleteDocument(ctx context.Context, id int, accessKey
 
 // UpdateDocument is the resolver for the updateDocument field.
 func (r *mutationResolver) UpdateDocument(ctx context.Context, input model.UpdateDocumentInput) (*bool, error) {
-	success, err := r.DocumentService.UpdateDocument(input.ID, input.Value, input.Title, input.AccessKey, *input.MaxViewCount, *input.TTLMs)
+	success, err := r.DocumentService.UpdateDocument(input.ID, input.Value, input.AccessKey, input.MaxViewCount, input.TTLMs)
 	if err != nil {
 		return nil, err
 	}

@@ -7,18 +7,16 @@ import (
 )
 
 type CreateDocumentInput struct {
-	Value        string  `json:"value"`
-	Title        *string `json:"title,omitempty"`
-	AccessKey    string  `json:"accessKey"`
-	MaxViewCount *int    `json:"maxViewCount,omitempty"`
-	TTLMs        *int    `json:"ttlMs,omitempty"`
+	Value        string `json:"value"`
+	AccessKey    string `json:"accessKey"`
+	MaxViewCount *int   `json:"maxViewCount,omitempty"`
+	TTLMs        *int   `json:"ttlMs,omitempty"`
 }
 
 type Document struct {
 	ID           int       `json:"id"`
 	CreatedAt    time.Time `json:"createdAt"`
 	UpdatedAt    time.Time `json:"updatedAt"`
-	Title        *string   `json:"title,omitempty"`
 	Value        string    `json:"value"`
 	AccessKey    string    `json:"accessKey"`
 	ViewCount    int       `json:"viewCount"`
@@ -35,8 +33,7 @@ type Query struct {
 type UpdateDocumentInput struct {
 	ID           int     `json:"id"`
 	Value        *string `json:"value,omitempty"`
-	Title        *string `json:"title,omitempty"`
 	AccessKey    string  `json:"accessKey"`
-	MaxViewCount *int    `json:"maxViewCount,omitempty"`
-	TTLMs        *int    `json:"ttlMs,omitempty"`
+	MaxViewCount int     `json:"maxViewCount"`
+	TTLMs        int     `json:"ttlMs"`
 }

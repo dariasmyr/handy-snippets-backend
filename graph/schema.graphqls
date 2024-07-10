@@ -8,7 +8,6 @@ type Document {
   id: Int!
   createdAt: Time!
   updatedAt: Time!
-  title: String
   value: String!
   accessKey: String!
   viewCount: Int!
@@ -18,7 +17,6 @@ type Document {
 
 input CreateDocumentInput {
   value: String!
-  title: String
   accessKey: String!
   maxViewCount: Int = -1
   ttlMs: Int = -1
@@ -27,7 +25,6 @@ input CreateDocumentInput {
 input UpdateDocumentInput {
   id: Int!
   value: String
-  title: String
   accessKey: String!
   maxViewCount: Int!
   ttlMs: Int!

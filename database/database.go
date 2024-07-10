@@ -17,7 +17,6 @@ func InitDB(dbPath string) (*sql.DB, error) {
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             createdAt DATETIME NOT NULL,
             updatedAt DATETIME NOT NULL,
-            title TEXT,
             value TEXT NOT NULL,
             accessKey TEXT NOT NULL,
             viewCount INTEGER NOT NULL DEFAULT 0,

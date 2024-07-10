@@ -34,7 +34,7 @@ func (s *documentService) StartExpiredDocumentsCleaner(interval time.Duration) {
 	}()
 }
 
-func (s *documentService) CreateDocument(value string, title *string, accessKey string, maxViewCount, ttlMs int) (int, error) {
+func (s *documentService) CreateDocument(value string, accessKey string, maxViewCount, ttlMs int) (int, error) {
 	now := time.Now()
 
 	hashedAccessKey, err := bcrypt.GenerateFromPassword([]byte(accessKey), bcrypt.DefaultCost)
@@ -42,9 +42,9 @@ func (s *documentService) CreateDocument(value string, title *string, accessKey 
 		return 0, err
 	}
 
-	res, err := s.db.Exec(`INSERT INTO documents (createdAt, updatedAt, title, value, accessKey, viewCount, maxViewCount, ttlMs) 
-                           VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-		now, now, title, value, string(hashedAccessKey), 0, maxViewCount, ttlMs)
+	res, err := s.db.Exec(`INSERT INTO documents (createdAt, updatedAt, value, accessKey, viewCount, maxViewCount, ttlMs) 
+                           VALUES (?, ?, ?, ?, ?, ?, ?)`,
+		now, now, value, string(hashedAccessKey), 0, maxViewCount, ttlMs)
 	if err != nil {
 		return 0, err
 	}
@@ -55,7 +55,7 @@ func (s *documentService) CreateDocument(value string, title *string, accessKey 
 	return int(id), nil
 }
 
-func (s *documentService) UpdateDocument(id int, value *string, title *string, accessKey string, maxViewCount, ttlMs int) (bool, error) {
+func (s *documentService) UpdateDocument(id int, value *string, accessKey string, maxViewCount, ttlMs int) (bool, error) {
 	println("id", id)
 	var storedHashedAccessKey string
 	var createdAt time.Time
@@ -79,8 +79,8 @@ func (s *documentService) UpdateDocument(id int, value *string, title *string, a
 		return false, errors.New("access denied")
 	}
 
-	_, err = s.db.Exec(`UPDATE documents SET updatedAt = ?, title = ?, value = ?, maxViewCount = ?, ttlMs = ? WHERE id = ?`,
-		time.Now(), title, value, maxViewCount, ttlMs, id)
+	_, err = s.db.Exec(`UPDATE documents SET updatedAt = ?, value = ?, maxViewCount = ?, ttlMs = ? WHERE id = ?`,
+		time.Now(), value, maxViewCount, ttlMs, id)
 	if err != nil {
 		return false, err
 	}
@@ -123,13 +123,12 @@ func (s *documentService) DeleteDocument(id int, accessKey string) (bool, error)
 
 func (s *documentService) GetDocument(id int) (*model.Document, error) {
 	var storedHashedAccessKey string
-	row := s.db.QueryRow(`SELECT id, createdAt, updatedAt, title, value, accessKey, viewCount, maxViewCount, ttlMs 
+	row := s.db.QueryRow(`SELECT id, createdAt, updatedAt, value, accessKey, viewCount, maxViewCount, ttlMs 
                           FROM documents WHERE id = ?`, id)
 
 	var doc model.Document
-	var title sql.NullString
 
-	err := row.Scan(&doc.ID, &doc.CreatedAt, &doc.UpdatedAt, &title, &doc.Value, &storedHashedAccessKey, &doc.ViewCount, &doc.MaxViewCount, &doc.TTLMs)
+	err := row.Scan(&doc.ID, &doc.CreatedAt, &doc.UpdatedAt, &doc.Value, &storedHashedAccessKey, &doc.ViewCount, &doc.MaxViewCount, &doc.TTLMs)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, errors.New("document not found")
@@ -143,12 +142,6 @@ func (s *documentService) GetDocument(id int) (*model.Document, error) {
 			return nil, err
 		}
 		return nil, errors.New("document expired and has been deleted")
-	}
-
-	if title.Valid {
-		doc.Title = &title.String
-	} else {
-		doc.Title = nil
 	}
 
 	if doc.MaxViewCount == -1 || doc.ViewCount < doc.MaxViewCount {

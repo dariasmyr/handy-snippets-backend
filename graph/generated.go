@@ -54,7 +54,6 @@ type ComplexityRoot struct {
 		ID           func(childComplexity int) int
 		MaxViewCount func(childComplexity int) int
 		TTLMs        func(childComplexity int) int
-		Title        func(childComplexity int) int
 		UpdatedAt    func(childComplexity int) int
 		Value        func(childComplexity int) int
 		ViewCount    func(childComplexity int) int
@@ -133,13 +132,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Document.TTLMs(childComplexity), true
-
-	case "Document.title":
-		if e.complexity.Document.Title == nil {
-			break
-		}
-
-		return e.complexity.Document.Title(childComplexity), true
 
 	case "Document.updatedAt":
 		if e.complexity.Document.UpdatedAt == nil {
@@ -590,47 +582,6 @@ func (ec *executionContext) fieldContext_Document_updatedAt(_ context.Context, f
 	return fc, nil
 }
 
-func (ec *executionContext) _Document_title(ctx context.Context, field graphql.CollectedField, obj *model.Document) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Document_title(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Title, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Document_title(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Document",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _Document_value(ctx context.Context, field graphql.CollectedField, obj *model.Document) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Document_value(ctx, field)
 	if err != nil {
@@ -1049,8 +1000,6 @@ func (ec *executionContext) fieldContext_Query_getDocument(ctx context.Context, 
 				return ec.fieldContext_Document_createdAt(ctx, field)
 			case "updatedAt":
 				return ec.fieldContext_Document_updatedAt(ctx, field)
-			case "title":
-				return ec.fieldContext_Document_title(ctx, field)
 			case "value":
 				return ec.fieldContext_Document_value(ctx, field)
 			case "accessKey":
@@ -2995,7 +2944,7 @@ func (ec *executionContext) unmarshalInputCreateDocumentInput(ctx context.Contex
 		asMap["ttlMs"] = -1
 	}
 
-	fieldsInOrder := [...]string{"value", "title", "accessKey", "maxViewCount", "ttlMs"}
+	fieldsInOrder := [...]string{"value", "accessKey", "maxViewCount", "ttlMs"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -3009,13 +2958,6 @@ func (ec *executionContext) unmarshalInputCreateDocumentInput(ctx context.Contex
 				return it, err
 			}
 			it.Value = data
-		case "title":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Title = data
 		case "accessKey":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("accessKey"))
 			data, err := ec.unmarshalNString2string(ctx, v)
@@ -3050,7 +2992,7 @@ func (ec *executionContext) unmarshalInputUpdateDocumentInput(ctx context.Contex
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"id", "value", "title", "accessKey", "maxViewCount", "ttlMs"}
+	fieldsInOrder := [...]string{"id", "value", "accessKey", "maxViewCount", "ttlMs"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -3071,13 +3013,6 @@ func (ec *executionContext) unmarshalInputUpdateDocumentInput(ctx context.Contex
 				return it, err
 			}
 			it.Value = data
-		case "title":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Title = data
 		case "accessKey":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("accessKey"))
 			data, err := ec.unmarshalNString2string(ctx, v)
@@ -3087,14 +3022,14 @@ func (ec *executionContext) unmarshalInputUpdateDocumentInput(ctx context.Contex
 			it.AccessKey = data
 		case "maxViewCount":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("maxViewCount"))
-			data, err := ec.unmarshalOInt2ᚖint(ctx, v)
+			data, err := ec.unmarshalNInt2int(ctx, v)
 			if err != nil {
 				return it, err
 			}
 			it.MaxViewCount = data
 		case "ttlMs":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("ttlMs"))
-			data, err := ec.unmarshalOInt2ᚖint(ctx, v)
+			data, err := ec.unmarshalNInt2int(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -3139,8 +3074,6 @@ func (ec *executionContext) _Document(ctx context.Context, sel ast.SelectionSet,
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "title":
-			out.Values[i] = ec._Document_title(ctx, field, obj)
 		case "value":
 			out.Values[i] = ec._Document_value(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
