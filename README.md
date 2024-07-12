@@ -4,7 +4,7 @@
          style="width: 50%; height: auto;" />
 </div>
 
-# Handy Snippets Frontend
+# Handy Snippets Backend
 
 ## About The App
 
