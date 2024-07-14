@@ -35,6 +35,10 @@ func (s *documentService) StartExpiredDocumentsCleaner(interval time.Duration) {
 }
 
 func (s *documentService) CreateDocument(value string, accessKey string, maxViewCount, ttlMs int) (int, error) {
+	if len(value) > 100000 {
+		return 0, errors.New("value character length is greater than 100000 characters")
+	}
+
 	now := time.Now()
 
 	hashedAccessKey, err := bcrypt.GenerateFromPassword([]byte(accessKey), bcrypt.DefaultCost)
@@ -60,6 +64,10 @@ func (s *documentService) UpdateDocument(id int, value *string, accessKey string
 	var storedHashedAccessKey string
 	var createdAt time.Time
 	var viewCount int
+
+	if value != nil && len(*value) > 100000 {
+		return false, errors.New("value character length is greater than 100000 characters")
+	}
 
 	err := s.db.QueryRow(`SELECT accessKey, createdAt, viewCount FROM documents WHERE id = ?`, id).Scan(&storedHashedAccessKey, &createdAt, &viewCount)
 	if err != nil {
