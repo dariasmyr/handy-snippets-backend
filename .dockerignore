@@ -2,4 +2,4 @@ docker-compose.yml
 Dockerfile
 .env
 \data
-build
+.idea
