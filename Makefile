@@ -1,9 +1,16 @@
-.PHONY: build clean
+.PHONY: build clean tidy
 
-APP_NAME := build/server
+APP_NAME ?= server
+BUILD_DIR ?= build
+OUTPUT := $(BUILD_DIR)/$(APP_NAME)
+MAIN_FILE := cmd/server.go
 
 build:
-	go build -ldflags="-s -w" -o $(APP_NAME) cmd/server.go
+	mkdir -p $(BUILD_DIR)
+	go build -ldflags="-s -w" -o $(OUTPUT) $(MAIN_FILE)
 
 clean:
-	rm -f $(APP_NAME)
+	rm -f $(OUTPUT)
+
+tidy:
+	go mod tidy
