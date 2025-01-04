@@ -38,10 +38,10 @@ func main() {
 	resolver := graph.NewResolver(documentService)
 	srv := handler.New(graph.NewExecutableSchema(graph.Config{Resolvers: resolver}))
 
-	frontendURL := os.Getenv("FRONTEND_URL")
-	log.Println("Frontend URL:", frontendURL)
+	//frontendURL := os.Getenv("FRONTEND_URL")
+	//log.Println("Frontend URL:", frontendURL)
 	c := cors.New(cors.Options{
-		AllowedOrigins:   []string{frontendURL},
+		AllowedOrigins:   []string{"*"},
 		AllowCredentials: true,
 		AllowedMethods:   []string{"POST", "GET", "OPTIONS", "PUT", "DELETE"},
 		AllowedHeaders:   []string{"Accept", "Content-Type", "Content-Length", "Accept-Encoding", "X-CSRF-Token", "Authorization"},
