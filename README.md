@@ -8,7 +8,7 @@
 
 ## About The App
 
-[**Handy Snippets**](https://handy.uxna.me/) - an app for storing and sharing end-to-end encrypted notes online. Written on [**Go**](https://go.dev/), SQLite DB and [**GraphQL**](https://graphql.org/) API to interact with [**Handy Snippets Frontend**](https://github.com/dariasmyr/handy-snippets-frontend)
+[**Handy Snippets**](https://handy.foxtrot-stash.ru) - an app for storing and sharing end-to-end encrypted notes online. Written on [**Go**](https://go.dev/), SQLite DB and [**GraphQL**](https://graphql.org/) API to interact with [**Handy Snippets Frontend**](https://github.com/dariasmyr/handy-snippets-frontend)
 
 ## How to Run
 Сlone the repo:
