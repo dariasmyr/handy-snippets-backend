@@ -1,9 +1,6 @@
 package main
 
 import (
-	"github.com/99designs/gqlgen/graphql/handler"
-	"github.com/99designs/gqlgen/graphql/playground"
-	"github.com/rs/cors"
 	"log"
 	"net/http"
 	"os"
@@ -11,6 +8,10 @@ import (
 	"pastebin/graph"
 	"pastebin/services"
 	"time"
+
+	"github.com/99designs/gqlgen/graphql/handler"
+	"github.com/99designs/gqlgen/graphql/playground"
+	"github.com/rs/cors"
 )
 
 const defaultPort = "8080"
@@ -35,7 +36,7 @@ func main() {
 	}
 
 	resolver := graph.NewResolver(documentService)
-	srv := handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: resolver}))
+	srv := handler.New(graph.NewExecutableSchema(graph.Config{Resolvers: resolver}))
 
 	c := cors.New(cors.Options{
 		AllowedOrigins:   []string{os.Getenv("FRONTEND_URL")},
