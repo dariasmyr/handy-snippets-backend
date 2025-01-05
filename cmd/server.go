@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/99designs/gqlgen/graphql/handler/transport"
 	"log"
 	"net/http"
 	"os"
@@ -37,6 +38,10 @@ func main() {
 
 	resolver := graph.NewResolver(documentService)
 	srv := handler.New(graph.NewExecutableSchema(graph.Config{Resolvers: resolver}))
+
+	srv.AddTransport(transport.Options{})
+	srv.AddTransport(transport.GET{})
+	srv.AddTransport(transport.POST{})
 
 	frontendURL := os.Getenv("FRONTEND_URL")
 	log.Println("Frontend URL:", frontendURL)
