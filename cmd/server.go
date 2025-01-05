@@ -14,7 +14,7 @@ import (
 	"github.com/rs/cors"
 )
 
-const defaultPort = "8080"
+const defaultPort = "4000"
 
 func main() {
 	dbPath := "./data/db.sqlite"
@@ -38,10 +38,10 @@ func main() {
 	resolver := graph.NewResolver(documentService)
 	srv := handler.New(graph.NewExecutableSchema(graph.Config{Resolvers: resolver}))
 
-	//frontendURL := os.Getenv("FRONTEND_URL")
-	//log.Println("Frontend URL:", frontendURL)
+	frontendURL := os.Getenv("FRONTEND_URL")
+	log.Println("Frontend URL:", frontendURL)
 	c := cors.New(cors.Options{
-		AllowedOrigins:   []string{"*"},
+		AllowedOrigins:   []string{frontendURL},
 		AllowCredentials: true,
 		AllowedMethods:   []string{"POST", "GET", "OPTIONS", "PUT", "DELETE"},
 		AllowedHeaders:   []string{"Accept", "Content-Type", "Content-Length", "Accept-Encoding", "X-CSRF-Token", "Authorization"},
