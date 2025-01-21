@@ -1,13 +1,13 @@
 module pastebin
 
-go 1.23.0
+go 1.23.5
 
 require (
-	github.com/99designs/gqlgen v0.17.62
+	github.com/99designs/gqlgen v0.17.63
 	github.com/mattn/go-sqlite3 v1.14.24
 	github.com/rs/cors v1.11.1
 	github.com/vektah/gqlparser/v2 v2.5.21
-	golang.org/x/crypto v0.31.0
+	golang.org/x/crypto v0.32.0
 )
 
 require (
